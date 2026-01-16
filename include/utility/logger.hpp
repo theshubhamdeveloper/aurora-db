@@ -2,11 +2,11 @@
 #include <iostream>
 #include <string>
 
-#include "core/cli.hpp"
+#include "core/cli_handler.hpp"
 using namespace crush;
 
 namespace aurora {
-    class logger {
+    class Logger {
     public:
         enum class Level {
             Info,
@@ -24,75 +24,73 @@ namespace aurora {
         static void warn(const std::string &msg) { log(Level::Warn, msg); }
         static void error(const std::string &msg) { log(Level::Error, msg); }
 
-        static void table(const vector<string> &cols, const vector<string> &dataCells) {
-            const i32 colsSize = cols.size();
-            const i32 dataCellsSize = dataCells.size();
+        static void table(const vector<string> &columnHeaders, const vector<vector<string> > &dataCells) {
+            const usize totalCols = columnHeaders.size();
+            const usize totalRows = dataCells.size();
 
-            i32 colWidths[colsSize];
-            for (i32 i = 0; i < colsSize; i++) {
-                colWidths[i] = cols[i].size();
+            vector<usize> columnWidths;
+            columnWidths.reserve(columnHeaders.size());
+
+            for (const auto& header : columnHeaders) {
+                columnWidths.push_back(header.size());
             }
 
-            for (i32 i = 0; i < dataCellsSize; i++) {
-                const i32 cellWidth = dataCells[i].length();
-                const i32 colIndex = i % colsSize;
-
-                if (colWidths[colIndex] < cellWidth)
-                    colWidths[colIndex] = cellWidth;
-            }
-
-            //header
-            for (i32 i = 0; i < colsSize; i++) {
-                cout << "+";
-                const i32 colIndex = i % colsSize;
-                for (i32 k = 0; k < colWidths[colIndex] + 2; k++) {
-                    cout << "-";
+            // calculating cols space acquired
+            for (usize r = 0; r < totalRows; r++) {
+                for (usize c = 0; c < totalCols; c++) {
+                    const usize cellWidth = dataCells[r][c].length();
+                    if (columnWidths[c] < cellWidth)
+                        columnWidths[c] = cellWidth;
                 }
             }
-            cout << "+" << endl;
-            for (i32 i = 0; i < colsSize; i++) {
+
+            //printing table col headers
+            tableBorder(columnWidths);
+
+            for (usize c = 0; c < totalCols; c++) {
                 cout << "|";
-                const string &col = cols[i];
-                cout << " " << col << " ";
-                for (i32 k = 0; k < colWidths[i] - col.size(); k++) {
+
+                const string &header = columnHeaders[c];
+                cout << " " << header << " ";
+
+                for (usize k = 0; k < columnWidths[c] - header.size(); k++) {
                     cout << " ";
                 }
             }
             cout << "|" << endl;
-            for (i32 i = 0; i < colsSize; i++) {
-                cout << "+";
-                const i32 colIndex = i % colsSize;
-                for (i32 k = 0; k < colWidths[colIndex] + 2; k++) {
-                    cout << "-";
-                }
-            }
-            cout << "+" << endl;
 
+            tableBorder(columnWidths);
 
-            //body
-            for (i32 i = 0; i < dataCellsSize / colsSize; i++) {
-                for (i32 j = 0; j < colsSize; j++) {
+            //printing table body
+            for (usize r = 0; r < totalRows; r++) {
+                for (usize c = 0; c < totalCols; c++) {
                     cout << "|";
-                    const string &cell = dataCells[i * colsSize + j];
+
+                    const string &cell = dataCells[r][c];
                     cout << " " << cell << " ";
-                    for (i32 k = 0; k < colWidths[j] - cell.size(); k++) {
+
+                    for (usize k = 0; k < columnWidths[c] - cell.size(); k++) {
                         cout << " ";
                     }
                 }
                 cout << "|" << endl;
             }
-            for (i32 i = 0; i < colsSize; i++) {
+
+            tableBorder(columnWidths);
+        }
+
+    private:
+        static void tableBorder(const vector<usize> &columnWidths) {
+            for (const usize &columnWidth: columnWidths) {
                 cout << "+";
-                const i32 colIndex = i % colsSize;
-                for (i32 k = 0; k < colWidths[colIndex] + 2; k++) {
+                for (usize k = 0; k < columnWidth + 2; k++) {
                     cout << "-";
                 }
             }
             cout << "+" << endl;
         }
 
-    private:
-        static const char *prefix(Level level) {
+        static const char *prefix(const Level level) {
             switch (level) {
                 case Level::Info: return "[INFO] ";
                 case Level::Success: return "[OK] ";
