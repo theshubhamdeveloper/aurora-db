@@ -2,24 +2,19 @@
 #include <string>
 #include <unordered_map>
 
+using namespace std;
+
 namespace aurora {
     class DBServices {
-        std::unordered_map<std::string, std::string> mDB;
-        bool mIsRunning;
+        unordered_map<string, string> mDB;
 
     public:
-        DBServices();
-
         void insert(const std::string &key, const std::string &value);
 
-        [[nodiscard]] std::string find(const std::string &key) const;
+        unordered_map<string, string> get(const string &key) const;
 
-        void remove(const std::string &key);
+        void remove(const string &key);
 
         void setIsRunning(bool isRunning);
-
-        [[nodiscard]] bool getIsRunning() const;
-
-        [[nodiscard]] const std::unordered_map<std::string, std::string> &getData() const;
     };
 }

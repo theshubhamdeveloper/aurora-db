@@ -2,27 +2,40 @@
 #include "library/data_type.hpp"
 #include <iostream>
 
-#include "core/cli.hpp"
+#include "core/cli_handler.hpp"
 
 using namespace crush;
 using namespace aurora;
 using namespace std;
 
 i32 main() {
-    auto dbManager = DBServices();
-    auto cli = Cli(&dbManager);
-    string cmd;
+    auto dbEngine = DatabaseEngine();
 
-    cout << std::endl;
-    cout << "------ Welcome to AuroraDB! ------" << std::endl;
-    cout << std::endl;
-    cout << "- Perform your action -";
-    cout << std::endl;
+    const auto cli = CLIHandler(&dbEngine.commandController());
 
-    while (dbManager.getIsRunning()) {
-        cout << "auroraDB> ";
-        cli.askCommand();
+    bool isRunning = true;
+
+    dbEngine.start();
+
+    cout << "\n" << "------ Welcome to AuroraDB! ------" << "\n" << "\n";
+
+    while (isRunning) {
+        string input;
+
+        cout << "AuroraDB > ";
+        getline(cin, input);
+
+        if (input == "exit") {
+            isRunning = false;
+            continue;
+        }
+
+        cli.requestHandler(input);
     }
+
+    dbEngine.shutdown();
+
+    cout << "\n" << "------ Thanks for using AuroraDB! ------" << "\n";
 
     return 0;
 }
