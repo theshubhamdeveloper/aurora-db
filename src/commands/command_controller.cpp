@@ -3,12 +3,14 @@
 #include "utility/logger.hpp"
 
 namespace aurora {
-    CommandController::CommandController(DBServices *dbServices) : mDBServices(dbServices) {
+    CommandController::CommandController(DBServices *dbServices,
+                                         WALHandler *wal) : mDBServices(dbServices), mWal(wal) {
     }
 
     void CommandController::commandHandler(const Command &command) const {
         switch (command.action) {
             case CommandActionType::Insert:
+                mWal->append(command);
                 mDBServices->insert(command.key, command.value);
                 break;
 
@@ -18,7 +20,7 @@ namespace aurora {
                 const unordered_map<string, string> data = mDBServices->get(command.key);
 
                 if (data.empty()) {
-                    Logger::info("Key does not exit");
+                    Logger::info("Key does not exits");
                     break;
                 }
 
@@ -32,6 +34,7 @@ namespace aurora {
             break;
 
             case CommandActionType::Remove:
+                mWal->append(command);
                 mDBServices->remove(command.key);
                 break;
 

@@ -7,6 +7,8 @@ namespace aurora {
     class CommandController;
 
     class DatabaseEngine {
+        WALHandler mWalHandler;
+
         DBServices mDBServices;
 
         CommandController mCMDController;
@@ -17,6 +19,8 @@ namespace aurora {
         void start();
 
         void shutdown();
+
+        WALHandler &walHandler();
 
         DBServices &dbServices();
 

@@ -3,11 +3,13 @@
 #include "utility/logger.hpp"
 
 namespace aurora {
-    DatabaseEngine::DatabaseEngine() : mCMDController(&mDBServices) {
+    DatabaseEngine::DatabaseEngine() : mWalHandler(&mDBServices, "aurora.wal"),
+                                       mCMDController({&mDBServices, &mWalHandler}) {
     }
 
     void DatabaseEngine::start() {
         Logger::info("Starting database engine...");
+        mWalHandler.replay();
     }
 
     void DatabaseEngine::shutdown() {
@@ -21,5 +23,9 @@ namespace aurora {
 
     DBServices &DatabaseEngine::dbServices() {
         return mDBServices;
+    }
+
+    WALHandler &DatabaseEngine::walHandler() {
+        return mWalHandler;
     }
 }
