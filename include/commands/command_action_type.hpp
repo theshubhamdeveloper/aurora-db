@@ -58,7 +58,7 @@ namespace aurora {
             return CommandActionType::Get;
         if (actionStr == "update")
             return CommandActionType::Update;
-        if (actionStr == "invalid")
+        if (actionStr == "remove")
             return CommandActionType::Remove;
 
         return CommandActionType::Invalid;
