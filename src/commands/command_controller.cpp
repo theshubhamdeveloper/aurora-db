@@ -18,7 +18,7 @@ namespace aurora {
                 const unordered_map<string, string> data = mDBServices->get(command.key);
 
                 if (data.empty()) {
-                    Logger::info("Database is empty");
+                    Logger::info("Key does not exit");
                     break;
                 }
 

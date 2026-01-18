@@ -1,6 +1,5 @@
 #include "core/db_services.hpp"
-#include <iostream>
-#include <ostream>
+#include "utility/logger.hpp"
 
 namespace aurora {
     void DBServices::insert(const string &key, const string &value) {
@@ -8,9 +7,10 @@ namespace aurora {
     }
 
     unordered_map<string, string> DBServices::get(const string &key) const {
-        if (key == "*") {
-            return mDB;
-        }
+        if (key == "*") return mDB;
+
+        if (!mDB.contains(key)) return {};
+
         return {{key, mDB.at(key)}};
     }
 

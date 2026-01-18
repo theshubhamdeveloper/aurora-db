@@ -14,7 +14,5 @@ namespace aurora {
         unordered_map<string, string> get(const string &key) const;
 
         void remove(const string &key);
-
-        void setIsRunning(bool isRunning);
     };
 }
