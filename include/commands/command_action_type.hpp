@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <algorithm>
+#include <ranges>
 
 #include "library/data_type.hpp"
 
