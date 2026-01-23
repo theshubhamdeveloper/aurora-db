@@ -11,6 +11,8 @@ add_executable(aurora_db main.cpp
         src/commands/command_controller.cpp
         src/core/database_engine.cpp
         src/core/wal_payload.cpp
+        src/algorithm/btree_node.cpp
+        src/algorithm/btree.cpp
 )
 
 target_include_directories(aurora_db PRIVATE
