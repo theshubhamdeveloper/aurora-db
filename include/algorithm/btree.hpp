@@ -17,6 +17,10 @@ namespace aurora {
 
         void handleOverflow(BTreeNode *parentNode, BTreeNode &node);
 
+        static void printNode(const BTreeNode &node,
+                              const std::string &prefix = "",
+                              bool isLast = true);
+
     public:
         explicit BTree(u16 order);
 
@@ -25,5 +29,7 @@ namespace aurora {
         void insert(const string &key, const string &value);
 
         u16 minSize() const;
+
+        void print() const;
     };
 }

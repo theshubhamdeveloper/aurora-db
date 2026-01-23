@@ -88,6 +88,44 @@ namespace aurora {
         insertIntoSubtree(nullptr, *root, key, value);
     }
 
+    void BTree::print() const {
+        printNode(*root);
+    }
+
+    void BTree::printNode(const BTreeNode &node,
+                          const std::string &prefix,
+                          const bool isLast) {
+        cout << prefix;
+        cout << (isLast ? "└─ " : "├─ ");
+
+        // print keys
+        cout << "[ ";
+        for (size_t i = 0; i < node.keys.size(); ++i) {
+            cout << node.keys[i];
+            if (i + 1 < node.keys.size()) cout << ", ";
+        }
+        cout << " ]";
+
+        // print values
+        if (node.isLeaf) {
+            cout << " -> { ";
+            for (size_t i = 0; i < node.values.size(); ++i) {
+                cout << node.values[i];
+                if (i + 1 < node.values.size()) cout << ", ";
+            }
+            cout << " }";
+        }
+
+        cout << "\n";
+
+        // recurse into children
+        const string childPrefix = prefix + (isLast ? "   " : "│  ");
+        for (size_t i = 0; i < node.children.size(); ++i) {
+            const bool lastChild = i == node.children.size() - 1;
+            printNode(*node.children[i], childPrefix, lastChild);
+        }
+    }
+
     u16 BTree::minSize() const {
         return (order - 1) / 2;
     }
