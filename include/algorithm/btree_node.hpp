@@ -1,4 +1,5 @@
 #pragma once
+#include <optional>
 #include <vector>
 
 #include "library/data_type.hpp"
@@ -13,8 +14,10 @@ namespace aurora {
         vector<BTreeNode *> children;
         bool isLeaf;
 
-
         BTreeNode(u16 order, bool isLeaf);
+
+        BTreeNode(u16 order, bool isLeaf, std::optional<std::vector<string> > keysOpt,
+                  std::optional<std::vector<BTreeNode *> > childrenOpt, std::optional<std::vector<string> > valuesOpt);
 
         ~BTreeNode();
 
@@ -24,8 +27,12 @@ namespace aurora {
 
         void insertChild(u16 at, BTreeNode *node);
 
-        bool isOverflowing() const;
+        BTreeNode *split(u16 splitIndex);
 
-        u16 size() const;
+        [[nodiscard]] bool isOverflowing() const;
+
+        [[nodiscard]] u16 size() const;
+
+        [[nodiscard]] u16 order() const;
     };
 }

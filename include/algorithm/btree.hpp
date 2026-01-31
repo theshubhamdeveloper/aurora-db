@@ -11,8 +11,6 @@ namespace aurora {
         BTreeNode *root;
         u16 order;
 
-        string splitNodeAndPromoteKey(BTreeNode &leftNode, BTreeNode &rightNode) const;
-
         void insertIntoSubtree(BTreeNode *parentNode, BTreeNode &node, const string &key, const string &value);
 
         void handleOverflow(BTreeNode *parentNode, BTreeNode &node);
@@ -28,7 +26,7 @@ namespace aurora {
 
         void insert(const string &key, const string &value);
 
-        u16 minSize() const;
+        [[nodiscard]] u16 minSize() const;
 
         void print() const;
     };
