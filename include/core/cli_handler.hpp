@@ -1,9 +1,7 @@
 #pragma once
 #include <vector>
-
+#include <string>
 #include "database_engine.hpp"
-
-using namespace std;
 
 namespace aurora {
     class CLIHandler {
@@ -12,8 +10,8 @@ namespace aurora {
     public:
         explicit CLIHandler(CommandController *cmdController);
 
-        void requestHandler(const string& request) const;
+        void requestHandler(const std::string& request) const;
 
-        static vector<string> tokenize(const string &data);
+        static std::vector<std::string> tokenize(const std::string &data);
     };
 }

@@ -1,29 +1,24 @@
-#include "core/db_services.hpp"
-#include "library/data_type.hpp"
+#include "include/cosmos.hpp"
 #include <iostream>
-
+#include "algorithm/btree.hpp"
 #include "core/cli_handler.hpp"
 
-using namespace crush;
-using namespace aurora;
-using namespace std;
+cosmos::i32 main() {
+    auto dbEngine = aurora::DatabaseEngine();
 
-i32 main() {
-    auto dbEngine = DatabaseEngine();
-
-    const auto cli = CLIHandler(&dbEngine.commandController());
+    const auto cli = aurora::CLIHandler(&dbEngine.commandController());
 
     bool isRunning = true;
 
     dbEngine.start();
 
-    cout << "\n" << "------ Welcome to AuroraDB! ------" << "\n" << "\n";
+    std::cout << "\n" << "------ Welcome to AuroraDB! ------" << "\n" << "\n";
 
     while (isRunning) {
-        string input;
+        std::string input;
 
-        cout << "AuroraDB > ";
-        getline(cin, input);
+        std::cout << "AuroraDB > ";
+        getline(std::cin, input);
 
         if (input == "exit") {
             isRunning = false;
@@ -35,7 +30,7 @@ i32 main() {
 
     dbEngine.shutdown();
 
-    cout << "\n" << "------ Thanks for using AuroraDB! ------" << "\n";
+    std::cout << "\n" << "------ Thanks for using AuroraDB! ------" << "\n";
 
     return 0;
 }

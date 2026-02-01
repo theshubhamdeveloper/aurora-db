@@ -1,22 +1,19 @@
 #pragma once
 #include <string>
-
+#include "cosmos.hpp"
 #include "db_services.hpp"
 #include "wal_payload.hpp"
 #include "commands/command.hpp"
-#include "library/data_type.hpp"
-
-using namespace std;
 
 namespace aurora {
     class WALHandler {
         DBServices *mDBServices;
-        string mFileName;
-        i32 mWalFd;
-        u16 mPermissions;
+        std::string mFileName;
+        cosmos::i32 mWalFd;
+        cosmos::u16 mPermissions;
 
     public:
-        explicit WALHandler(DBServices *dbServices, const string &fileName);
+        explicit WALHandler(DBServices *dbServices, const std::string &fileName);
 
         ~WALHandler();
 
@@ -24,10 +21,10 @@ namespace aurora {
 
         void replay() const;
 
-        bool applyReplayInDB(const WALPayload &payload) const;
+        [[nodiscard]] bool applyReplayInDB(const WALPayload &payload) const;
 
         static bool validatePayload(const WALPayload &payload);
 
-        static u8 generateChecksum(const Command &command);
+        static cosmos::u8 generateChecksum(const Command &command);
     };
 }

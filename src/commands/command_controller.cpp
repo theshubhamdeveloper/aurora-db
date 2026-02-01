@@ -1,5 +1,4 @@
 #include "commands/command_controller.hpp"
-
 #include "utility/logger.hpp"
 
 namespace aurora {
@@ -15,9 +14,9 @@ namespace aurora {
                 break;
 
             case CommandActionType::Get: {
-                vector<vector<string> > table;
+                std::vector<std::vector<std::string> > table;
 
-                const unordered_map<string, string> data = mDBServices->get(command.key);
+                const std::unordered_map<std::string, std::string> data = mDBServices->get(command.key);
 
                 if (data.empty()) {
                     Logger::info("Key does not exits");

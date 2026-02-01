@@ -1,6 +1,4 @@
 #include "core/wal_payload.hpp"
-#include <vector>
-
 #include "utility/logger.hpp"
 
 namespace aurora {
@@ -8,13 +6,13 @@ namespace aurora {
         return {action, key, value};
     }
 
-    string WALPayload::stringify(const WALPayload &payload) {
-        string payloadStr = actionTypeToString(payload.action, true) +
-                            "|" + to_string(payload.keyLen) +
+    std::string WALPayload::stringify(const WALPayload &payload) {
+        std::string payloadStr = actionTypeToString(payload.action, true) +
+                            "|" + std::to_string(payload.keyLen) +
                             "|" + payload.key;
 
         if (!payload.value.empty()) {
-            payloadStr += "|" + to_string(payload.value.length()) + "|" + payload.value;
+            payloadStr += "|" + std::to_string(payload.value.length()) + "|" + payload.value;
         }
 
         payloadStr += "|" + payload.checksum +
@@ -23,9 +21,9 @@ namespace aurora {
         return payloadStr;
     }
 
-    WALPayload WALPayload::parse(const string &data) {
-        string current;
-        vector<string> tokens;
+    WALPayload WALPayload::parse(const std::string &data) {
+        std::string current;
+        std::vector<std::string> tokens;
 
         for (const char currentChar: data) {
             if (currentChar == '|') {
@@ -43,15 +41,15 @@ namespace aurora {
             return invalid();
         }
 
-        const u32 keyLen = stoi(tokens[1]);
-        const string key = tokens[2];
+        const cosmos::u32 keyLen = stoi(tokens[1]);
+        const std::string key = tokens[2];
 
         if (action != CommandActionType::Insert) {
             return {action, keyLen, 0, key, "", tokens[3]};
         }
 
-        const u32 valueLen = stoi(tokens[3]);
-        const string value = tokens[4];
+        const cosmos::u32 valueLen = stoi(tokens[3]);
+        const std::string value = tokens[4];
 
         return {action, keyLen, valueLen, key, value, tokens[5]};
     }

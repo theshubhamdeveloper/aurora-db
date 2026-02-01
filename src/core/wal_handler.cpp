@@ -2,12 +2,11 @@
 #include <string>
 #include <unistd.h>
 #include <fcntl.h>
-
 #include "core/wal_payload.hpp"
 #include "utility/logger.hpp"
 
 namespace aurora {
-    WALHandler::WALHandler(DBServices *dbServices, const string &fileName) : mDBServices(dbServices),
+    WALHandler::WALHandler(DBServices *dbServices, const std::string &fileName) : mDBServices(dbServices),
                                                                              mFileName(fileName),
                                                                              mPermissions(S_IRUSR | S_IWUSR) {
         mWalFd = open(fileName.data(), O_CREAT | O_WRONLY | O_APPEND, mPermissions);
@@ -22,14 +21,14 @@ namespace aurora {
 
     void WALHandler::append(const Command &command) const {
         WALPayload payload = {
-            command.action, static_cast<u32>(command.key.length()),
-            static_cast<u32>(command.value.length()),
+            command.action, static_cast<cosmos::u32>(command.key.length()),
+            static_cast<cosmos::u32>(command.value.length()),
             command.key, command.value
         };
 
-        payload.checksum = to_string(generateChecksum(command));
+        payload.checksum = std::to_string(generateChecksum(command));
 
-        const string entry = WALPayload::stringify(payload);
+        const std::string entry = WALPayload::stringify(payload);
 
         write(mWalFd, entry.data(), entry.size());
         fsync(mWalFd);
@@ -52,19 +51,19 @@ namespace aurora {
 
 
     void WALHandler::replay() const {
-        const i32 fd = open(mFileName.data(), O_CREAT | O_RDONLY, mPermissions);
+        const cosmos::i32 fd = open(mFileName.data(), O_CREAT | O_RDONLY, mPermissions);
         if (fd < 0) {
             Logger::error("Error opening file");
         }
 
-        constexpr u16 BUFFER_LEN = 256;
-        string currentPayload;
+        constexpr cosmos::u16 BUFFER_LEN = 256;
+        std::string currentPayload;
         char buffer[BUFFER_LEN];
 
-        isize readLength;
+        cosmos::isize readLength;
         do {
             readLength = read(fd, buffer, BUFFER_LEN);
-            for (isize i = 0; i < readLength; ++i) {
+            for (cosmos::isize i = 0; i < readLength; ++i) {
                 if (buffer[i] == '\n') {
                     if (!applyReplayInDB(WALPayload::parse(currentPayload))) return;
                     currentPayload = "";
@@ -78,13 +77,13 @@ namespace aurora {
         close(fd);
     }
 
-    u8 WALHandler::generateChecksum(const Command &command) {
-        std::string commandPayload = to_string(command.key.length()) + command.key;
+    cosmos::u8 WALHandler::generateChecksum(const Command &command) {
+        std::string commandPayload = std::to_string(command.key.length()) + command.key;
         if (!command.value.empty()) {
-            commandPayload = to_string(command.value.length()) + command.value;
+            commandPayload = std::to_string(command.value.length()) + command.value;
         }
 
-        u8 cs = 0;
+        cosmos::u8 cs = 0;
         for (const char c: commandPayload) {
             cs ^= c;
         }
@@ -98,7 +97,7 @@ namespace aurora {
         if (payload.key.length() != payload.keyLen || payload.value.length() != payload.valueLen)
             return false;
 
-        if (to_string(generateChecksum(payload.getCommand())) != payload.checksum)
+        if (std::to_string(generateChecksum(payload.getCommand())) != payload.checksum)
             return false;
 
         return true;

@@ -1,17 +1,15 @@
 #pragma once
 #include <string>
-
 #include "btree_node.hpp"
-
-using namespace std;
+#include "cosmos.hpp"
 
 // Todo Add ==> Get, Remove
 namespace aurora {
     class BTree {
         BTreeNode *root;
-        u16 order;
+        cosmos::u16 order;
 
-        void insertIntoSubtree(BTreeNode *parentNode, BTreeNode &node, const string &key, const string &value);
+        void insertIntoSubtree(BTreeNode *parentNode, BTreeNode &node, const std::string &key, const std::string &value);
 
         void handleOverflow(BTreeNode *parentNode, BTreeNode &node);
 
@@ -20,13 +18,13 @@ namespace aurora {
                               bool isLast = true);
 
     public:
-        explicit BTree(u16 order);
+        explicit BTree(cosmos::u16 order);
 
         ~BTree();
 
-        void insert(const string &key, const string &value);
+        void insert(const std::string &key, const std::string &value);
 
-        [[nodiscard]] u16 minSize() const;
+        [[nodiscard]] cosmos::u16 minSize() const;
 
         void print() const;
     };

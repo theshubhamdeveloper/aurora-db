@@ -1,22 +1,21 @@
 #include "algorithm/btree.hpp"
-
 #include <iostream>
 #include <ranges>
 
 namespace aurora {
-    BTree::BTree(const u16 order) : root(new BTreeNode{order, true}), order(order) {
+    BTree::BTree(const cosmos::u16 order) : root(new BTreeNode{order, true}), order(order) {
     }
 
     BTree::~BTree() {
         delete root;
     }
 
-    void BTree::insertIntoSubtree(BTreeNode *parentNode, BTreeNode &node, const string &key, const string &value) {
+    void BTree::insertIntoSubtree(BTreeNode *parentNode, BTreeNode &node, const std::string &key, const std::string &value) {
         if (node.isLeaf) {
             node.insertKeyValue(key, value);
         } else {
             auto currentChildNode = node.children[0];
-            for (i32 i = node.size() - 1; i >= 0; --i) {
+            for (cosmos::i32 i = node.size() - 1; i >= 0; --i) {
                 if (key > node.keys[i]) {
                     currentChildNode = node.children[i + 1];
                     break;
@@ -31,8 +30,8 @@ namespace aurora {
     }
 
     void BTree::handleOverflow(BTreeNode *parentNode, BTreeNode &node) {
-        const u16 splitIndex = minSize();
-        const string promotedKey = node.keys.at(splitIndex);
+        const cosmos::u16 splitIndex = minSize();
+        const std::string promotedKey = node.keys.at(splitIndex);
 
         BTreeNode *rightNode = node.split(splitIndex);
 
@@ -52,7 +51,7 @@ namespace aurora {
     }
 
 
-    void BTree::insert(const string &key, const string &value) {
+    void BTree::insert(const std::string &key, const std::string &value) {
         insertIntoSubtree(nullptr, *root, key, value);
     }
 
@@ -63,38 +62,38 @@ namespace aurora {
     void BTree::printNode(const BTreeNode &node,
                           const std::string &prefix,
                           const bool isLast) {
-        cout << prefix;
-        cout << (isLast ? "└─ " : "├─ ");
+        std::cout << prefix;
+        std::cout << (isLast ? "└─ " : "├─ ");
 
         // print keys
-        cout << "[ ";
+        std::cout << "[ ";
         for (size_t i = 0; i < node.keys.size(); ++i) {
-            cout << node.keys[i];
-            if (i + 1 < node.keys.size()) cout << ", ";
+            std::cout << node.keys[i];
+            if (i + 1 < node.keys.size()) std::cout << ", ";
         }
-        cout << " ]";
+        std::cout << " ]";
 
         // print values
         if (node.isLeaf) {
-            cout << " -> { ";
+            std::cout << " -> { ";
             for (size_t i = 0; i < node.values.size(); ++i) {
-                cout << node.values[i];
-                if (i + 1 < node.values.size()) cout << ", ";
+                std::cout << node.values[i];
+                if (i + 1 < node.values.size()) std::cout << ", ";
             }
-            cout << " }";
+            std::cout << " }";
         }
 
-        cout << "\n";
+        std::cout << "\n";
 
         // recurse into children
-        const string childPrefix = prefix + (isLast ? "   " : "│  ");
+        const std::string childPrefix = prefix + (isLast ? "   " : "│  ");
         for (size_t i = 0; i < node.children.size(); ++i) {
             const bool lastChild = i == node.children.size() - 1;
             printNode(*node.children[i], childPrefix, lastChild);
         }
     }
 
-    u16 BTree::minSize() const {
+    cosmos::u16 BTree::minSize() const {
         return (order - 1) / 2;
     }
 }

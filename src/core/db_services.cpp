@@ -2,11 +2,11 @@
 #include "utility/logger.hpp"
 
 namespace aurora {
-    void DBServices::insert(const string &key, const string &value) {
+    void DBServices::insert(const std::string &key, const std::string &value) {
         mDB.emplace(key, value);
     }
 
-    unordered_map<string, string> DBServices::get(const string &key) const {
+    std::unordered_map<std::string, std::string> DBServices::get(const std::string &key) const {
         if (key == "*") return mDB;
 
         if (!mDB.contains(key)) return {};
@@ -14,7 +14,7 @@ namespace aurora {
         return {{key, mDB.at(key)}};
     }
 
-    void DBServices::remove(const string &key) {
+    void DBServices::remove(const std::string &key) {
         mDB.erase(key);
     }
 }

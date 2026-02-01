@@ -1,5 +1,4 @@
 #pragma once
-
 #include "commands/command.hpp"
 #include "core/db_services.hpp"
 #include "core/wal_handler.hpp"

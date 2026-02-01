@@ -1,24 +1,22 @@
 #pragma once
 #include <string>
-
+#include "cosmos.hpp"
 #include "commands/command.hpp"
 #include "commands/command_action_type.hpp"
-
-using namespace std;
 
 namespace aurora {
     struct WALPayload {
         CommandActionType action;
-        u32 keyLen, valueLen;
-        string key, value;
-        string checksum;
+        cosmos::u32 keyLen, valueLen;
+        std::string key, value;
+        std::string checksum;
 
         [[nodiscard]] Command getCommand() const;
 
         static WALPayload invalid();
 
-        static string stringify(const WALPayload &payload);
+        static std::string stringify(const WALPayload &payload);
 
-        static WALPayload parse(const string &data);
+        static WALPayload parse(const std::string &data);
     };
 }

@@ -1,5 +1,4 @@
 #include "core/database_engine.hpp"
-
 #include "utility/logger.hpp"
 
 namespace aurora {

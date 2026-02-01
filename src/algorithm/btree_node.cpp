@@ -1,14 +1,14 @@
 #include "algorithm/btree_node.hpp"
-
+#include <algorithm>
 #include "utility/logger.hpp"
 
 namespace aurora {
     BTreeNode::BTreeNode(
-        const u16 order,
+        const cosmos::u16 order,
         const bool isLeaf,
-        std::optional<std::vector<string> > keysOpt,
+        std::optional<std::vector<std::string> > keysOpt,
         std::optional<std::vector<BTreeNode *> > childrenOpt,
-        std::optional<std::vector<string> > valuesOpt
+        std::optional<std::vector<std::string> > valuesOpt
     )
         : isLeaf(isLeaf) {
         // Keys
@@ -35,7 +35,7 @@ namespace aurora {
         }
     }
 
-    BTreeNode::BTreeNode(const u16 order, const bool isLeaf) : BTreeNode(order, isLeaf, nullopt, nullopt, nullopt) {
+    BTreeNode::BTreeNode(const cosmos::u16 order, const bool isLeaf) : BTreeNode(order, isLeaf, std::nullopt, std::nullopt, std::nullopt) {
     }
 
     BTreeNode::~BTreeNode() {
@@ -44,26 +44,26 @@ namespace aurora {
         }
     }
 
-    u16 BTreeNode::insertKey(const string &key) {
+    cosmos::u16 BTreeNode::insertKey(const std::string &key) {
         if (isOverflowing()) {
             Logger::error("Adding key and value in overflowing node");
             return -1;
         }
-        const auto it = ranges::lower_bound(keys, key);
+        const auto it = std::ranges::lower_bound(keys, key);
         keys.insert(it, key);
         return std::distance(keys.begin(), it);
     }
 
-    void BTreeNode::insertKeyValue(const string &key, const string &value) {
-        const u16 index = insertKey(key);
+    void BTreeNode::insertKeyValue(const std::string &key, const std::string &value) {
+        const cosmos::u16 index = insertKey(key);
         values.insert(values.begin() + index, value);
     }
 
-    void BTreeNode::insertChild(const u16 at, BTreeNode *node) {
+    void BTreeNode::insertChild(const cosmos::u16 at, BTreeNode *node) {
         children.insert(children.begin() + at, node);
     }
 
-    BTreeNode *BTreeNode::split(const u16 splitIndex) {
+    BTreeNode *BTreeNode::split(const cosmos::u16 splitIndex) {
         const auto rightNode = new BTreeNode(order(), isLeaf);
 
         if (isLeaf) {
@@ -102,11 +102,11 @@ namespace aurora {
         return size() == keys.capacity();
     }
 
-    u16 BTreeNode::size() const {
+    cosmos::u16 BTreeNode::size() const {
         return keys.size();
     }
 
-    u16 BTreeNode::order() const {
+    cosmos::u16 BTreeNode::order() const {
         return keys.capacity();
     }
 }

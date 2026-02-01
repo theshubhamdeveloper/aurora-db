@@ -2,11 +2,7 @@
 #include <string>
 #include <algorithm>
 #include <ranges>
-
-#include "library/data_type.hpp"
-
-using namespace std;
-using namespace crush;
+#include "cosmos.hpp"
 
 namespace aurora {
     enum class CommandActionType {
@@ -17,8 +13,8 @@ namespace aurora {
         Invalid = 999,
     };
 
-    inline string actionTypeToString(const CommandActionType action, const bool toUppercase = false) {
-        string actionStr;
+    inline std::string actionTypeToString(const CommandActionType action, const bool toUppercase = false) {
+        std::string actionStr;
         switch (action) {
             case CommandActionType::Insert:
                 actionStr = "insert";
@@ -38,21 +34,21 @@ namespace aurora {
         }
 
         if (toUppercase)
-            ranges::transform(actionStr,
-                              actionStr.begin(),
-                              [](const u8 c) {
-                                  return static_cast<char>(toupper(c));
-                              });
+            std::ranges::transform(actionStr,
+                                   actionStr.begin(),
+                                   [](const cosmos::u8 c) {
+                                       return static_cast<char>(toupper(c));
+                                   });
 
         return actionStr;
     }
 
-    inline CommandActionType stringToActionType(string actionStr) {
-        ranges::transform(actionStr,
-                          actionStr.begin(),
-                          [](const u8 c) {
-                              return static_cast<char>(tolower(c));
-                          });
+    inline CommandActionType stringToActionType(std::string actionStr) {
+        std::ranges::transform(actionStr,
+                               actionStr.begin(),
+                               [](const cosmos::u8 c) {
+                                   return static_cast<char>(tolower(c));
+                               });
 
         if (actionStr == "insert")
             return CommandActionType::Insert;

@@ -3,8 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "core/cli_handler.hpp"
-using namespace crush;
+#include "cosmos.hpp"
 
 namespace aurora {
     class Logger {
@@ -33,19 +32,19 @@ namespace aurora {
         static void table(
             const std::vector<std::string> &columnHeaders,
             const std::vector<std::vector<std::string> > &dataCells) {
-            const usize totalCols = columnHeaders.size();
-            const usize totalRows = dataCells.size();
+            const cosmos::usize totalCols = columnHeaders.size();
+            const cosmos::usize totalRows = dataCells.size();
 
-            std::vector<usize> columnWidths;
+            std::vector<cosmos::usize> columnWidths;
             columnWidths.reserve(totalCols);
 
             for (const auto &header: columnHeaders)
                 columnWidths.push_back(header.size());
 
             // calculating cols space acquired
-            for (usize r = 0; r < totalRows; r++) {
-                for (usize c = 0; c < totalCols; c++) {
-                    const usize cellWidth = dataCells[r][c].length();
+            for (cosmos::usize r = 0; r < totalRows; r++) {
+                for (cosmos::usize c = 0; c < totalCols; c++) {
+                    const cosmos::usize cellWidth = dataCells[r][c].length();
                     if (columnWidths[c] < cellWidth)
                         columnWidths[c] = cellWidth;
                 }
@@ -54,7 +53,7 @@ namespace aurora {
             tableBorder(columnWidths);
 
             // header row
-            for (usize c = 0; c < totalCols; c++) {
+            for (cosmos::usize c = 0; c < totalCols; c++) {
                 std::cout << "| ";
                 std::cout << columnHeaders[c];
                 pad(columnWidths[c] - columnHeaders[c].size());
@@ -65,8 +64,8 @@ namespace aurora {
             tableBorder(columnWidths);
 
             // body rows
-            for (usize r = 0; r < totalRows; r++) {
-                for (usize c = 0; c < totalCols; c++) {
+            for (cosmos::usize r = 0; r < totalRows; r++) {
+                for (cosmos::usize c = 0; c < totalCols; c++) {
                     std::cout << "| ";
                     std::cout << dataCells[r][c];
                     pad(columnWidths[c] - dataCells[r][c].size());
@@ -107,17 +106,17 @@ namespace aurora {
             return "";
         }
 
-        static void tableBorder(const std::vector<usize> &columnWidths) {
-            for (const usize w: columnWidths) {
+        static void tableBorder(const std::vector<cosmos::usize> &columnWidths) {
+            for (const cosmos::usize w: columnWidths) {
                 std::cout << "+";
-                for (usize i = 0; i < w + 2; i++)
+                for (cosmos::usize i = 0; i < w + 2; i++)
                     std::cout << "-";
             }
             std::cout << "+" << std::endl;
         }
 
-        static void pad(const usize count) {
-            for (usize i = 0; i < count; i++)
+        static void pad(const cosmos::usize count) {
+            for (cosmos::usize i = 0; i < count; i++)
                 std::cout << " ";
         }
     };
